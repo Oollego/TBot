@@ -1,0 +1,33 @@
+services:
+  mysql:
+     image: mysql
+     container_name: mysql
+     environment:
+         MYSQL_ROOT_PASSWORD: pass
+     volumes:
+         - mysql-data:/var/lib/mysql
+     restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: myadmin
+    ports:
+        - "9000:80"
+    environment:
+        - PMA_ARBITRARY=1
+    depends_on:
+        - mysql 
+
+  tbot:
+    image: ${DOCKER_REGISTRY-}tbot
+    environment:
+        - TOKEN=5612927906:AAE3chRHyA4QFSo1TORJXMUu_q2YMG_YIF0
+    volumes:
+        - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+    build:
+      context: .
+      dockerfile: TBot/Dockerfile
+    restart: unless-stopped
+
+volumes:
+    mysql-data:    
