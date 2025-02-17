@@ -146,7 +146,7 @@ namespace TBot.Application.Services
                         phpScript
                     );
                 
-                if ( !uploadResult.IsSuccess )
+                if ( uploadResult.IsSuccess )
                 {
                     var userHistoryRepository = serviceProvider.GetRequiredService<IBaseRepository<UserHistory>>();
 
