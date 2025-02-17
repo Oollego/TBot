@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TBot.Domain.Entity
+namespace TBot.Domain.Dto
 {
-    public class UserHistory
+    public class HistoryDto
     {
-        public long Id { get; set; }
         public long UserId { get; set; }
         public string Username { get; set; } = "";
         public string? AppName { get; set; }
         public string? AppBundle { get; set; }
-        public string? Secret { get; set; }
-        public string? SecretKeyParam { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

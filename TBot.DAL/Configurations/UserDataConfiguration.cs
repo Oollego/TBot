@@ -9,21 +9,21 @@ using TBot.Domain.Entity;
 
 namespace TBot.DAL.Configurations
 {
-    internal class UserConfiguration : IEntityTypeConfiguration<User>
+    internal class UserDataConfiguration : IEntityTypeConfiguration<UserData>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<UserData> builder)
         {
-            builder.ToTable("user");
+            builder.ToTable("users");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.UserName).IsRequired().HasMaxLength(128);
-            builder.Property(x => x.UserPassword).IsRequired().HasMaxLength(32);
+            builder.Property(x => x.PasswordSalt).IsRequired().HasMaxLength(128);
+            builder.Property(x => x.PasswordDk).IsRequired().HasMaxLength(128);
             builder.Property(x => x.Role).HasMaxLength(64);
 
             builder.HasMany(x => x.UserApps)
-                .WithOne(x => x.User)
+                .WithOne(x => x.UserData)
                 .HasForeignKey(x => x.UserId)
                 .HasPrincipalKey(x => x.Id);
-
         }
     }
 }

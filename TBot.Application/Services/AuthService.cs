@@ -1,57 +1,147 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using TBot.Application.Resources;
 using TBot.Domain.Entity;
 using TBot.Domain.Interfaces.Repositories;
+using TBot.Domain.Result;
 using TBot.Domain.Services;
 
 namespace TBot.Application.Services
 {
-    internal class AuthService
+    internal class AuthService: IAuthService
     {
         private readonly IHashService _hashService;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public AuthService(IHashService hashService, IBaseRepository<User> userRepository)
+        public AuthService(IHashService hashService, IServiceScopeFactory serviceScopeFactory)
         {
-            _userRepository = userRepository;
+            _serviceScopeFactory = serviceScopeFactory;
             _hashService = hashService;
         }
 
-        public async Task Register(string username, string password, long userId)
+        public async Task<BaseResult> RegisterAsync(string username, string password, long userId)
         {
-            if (username is null || password is null)
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                return;
+                return new BaseResult()
+                {
+                    IsSuccess = false,
+                    ResultMessage = ResultMessage.wrongNameOrPassword
+                };
             }
 
-            var user = await _userRepository.GetAll().AsNoTracking().Where(u => u.Id == userId).FirstOrDefaultAsync();
-
-            if (user is not null)
+            try
             {
-                return;
+                using var scope = _serviceScopeFactory.CreateScope();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<UserData>>();
+
+                var user = await userRepository.GetAll()
+                    .AsNoTracking()
+                    .Where(u => u.Id == userId)
+                    .FirstOrDefaultAsync();
+
+                if (user is not null)
+                {
+                    return new BaseResult()
+                    {
+                        IsSuccess = false,
+                        ResultMessage = ResultMessage.AccountAlreadyExists
+                    };
+                }
+
+                string salt = _hashService.HexString(Guid.NewGuid().ToString());
+                string dk = _hashService.HexString(salt + password);
+
+                user = new UserData()
+                {
+                    Id = userId,
+                    UserName = username,
+                    PasswordSalt = salt,
+                    PasswordDk = dk
+                };
+
+                await userRepository.CreateAsync(user);
+                await userRepository.SaveChangesAsync();
+
+                return new BaseResult()
+                {
+                    IsSuccess = true,
+                    ResultMessage = ResultMessage.ThanksForRegister
+                };
             }
-
-            string salt = _hashService.HexString(Guid.NewGuid().ToString());
-            string dk = _hashService.HexString(salt + password);
-
-            user = new User()
+            catch (Exception ex)
             {
-                Id = userId,
-                UserName = username,
-                PasswordSalt = salt,
-                PasswordDk = dk
-            };
-
-            await _userRepository.CreateAsync(user);
-            await _userRepository.SaveChangesAsync();
+                return new BaseResult()
+                {
+                    IsSuccess = false,
+                    ResultMessage = $"{ResultMessage.RegisterError}: {ex.Message}"
+                };
+            }
 
         }
 
+        public async Task<BaseResult> LoginAsync(string password, long userId)
+        {
+            if ( string.IsNullOrEmpty(password))
+            {
+                return new BaseResult()
+                {
+                    IsSuccess = false,
+                    ResultMessage = ResultMessage.wrongNameOrPassword
+                };
+            }
+
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<UserData>>();
+
+                var user = await userRepository.GetAll()
+                    .Where(u => u.Id == userId)
+                    .FirstOrDefaultAsync();
+
+                if (user is null)
+                {
+                    return new BaseResult()
+                    {
+                        IsSuccess = false,
+                        ResultMessage = ResultMessage.YouNotRegisted
+                    };
+                }
 
 
+                string dk = _hashService.HexString(user.PasswordSalt + password);
+
+                if (dk != user.PasswordDk)
+                {
+                    return new BaseResult()
+                    {
+                        IsSuccess = false,
+                        ResultMessage = ResultMessage.PasswordIsNotCorrect
+                    };
+                }
+
+                user.IsAuthorized = true;
+
+                userRepository.Update(user);
+
+                await userRepository.SaveChangesAsync();
+
+                return new BaseResult()
+                {
+                    IsSuccess = true,
+                    ResultMessage = ResultMessage.YouAreAuthorized + " " + user.Role.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResult()
+                {
+                    IsSuccess = false,
+                    ResultMessage = $"{ResultMessage.RegisterError}: {ex.Message}"
+                };
+            }
+
+        }
     }
 }

@@ -35,5 +35,14 @@ namespace TBot.DAL.Repositories
         {
             return await _dbContext.SaveChangesAsync();
         }
+
+        public TEntity Update(TEntity entity)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            _dbContext.Update(entity);
+
+            return entity;
+        }
     }
 }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TBot.Domain.Result;
 
 namespace TBot.Domain.Services
 {
     public interface ISftpService
     {
-        void UploadFile(string host, string username, string password, string remoteDirectory, string fileName, string fileContent);
+        Task<BaseResult> UploadFileAsync(string host, int port, string username, string password, string fileContent);
+
     }
 }

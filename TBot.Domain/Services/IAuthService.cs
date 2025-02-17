@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TBot.Domain.Entity;
+using TBot.Domain.Result;
 
 namespace TBot.Domain.Services
 {
     public interface IAuthService
     {
-        Task Register(string username, string password);
-        Task<User> GetUserById(long userId);
+        Task <BaseResult> RegisterAsync(string username, string password, long userId);
+        Task<BaseResult> LoginAsync(string password, long userId);
+
     }
 }
