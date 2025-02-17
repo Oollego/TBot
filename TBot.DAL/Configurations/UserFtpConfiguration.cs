@@ -16,6 +16,7 @@ namespace TBot.DAL.Configurations
             builder.ToTable("user_ftp_settings");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.SftpPort).IsRequired();
             builder.Property(x => x.SftpHost).IsRequired().HasMaxLength(256);
             builder.Property(x => x.SftpPassword).IsRequired().HasMaxLength(36);
             builder.Property(x => x.SftpLogin).IsRequired().HasMaxLength(128);

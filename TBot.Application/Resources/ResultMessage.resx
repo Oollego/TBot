@@ -168,4 +168,7 @@
   <data name="UserRoleIHaveBeenChanged" xml:space="preserve">
     <value>Роль пользователя успешно изменена на </value>
   </data>
+  <data name="FtpPortIsNotCorrect" xml:space="preserve">
+    <value>Ftp порт не верный.</value>
+  </data>
 </root>

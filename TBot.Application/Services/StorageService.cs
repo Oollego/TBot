@@ -28,7 +28,7 @@ namespace TBot.Application.Services
             _phpGeneratorService = phpGeneratorService;
         }
 
-        public async Task<BaseResult> SetStorageDataAsync(string host, string login, string password, long userId)
+        public async Task<BaseResult> SetStorageDataAsync(string host, string port, string login, string password, long userId)
         {
             if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
@@ -36,6 +36,17 @@ namespace TBot.Application.Services
                 {
                     IsSuccess = false,
                     ResultMessage = ResultMessage.WrongParameters
+                };
+            }
+
+            int ftpPort;
+
+            if (!int.TryParse(port, out ftpPort))
+            {
+                return new BaseResult
+                {
+                    IsSuccess = false,
+                    ResultMessage = ResultMessage.FtpPortIsNotCorrect
                 };
             }
 
@@ -63,6 +74,7 @@ namespace TBot.Application.Services
                     user.UserFtp = new UserFtp()
                     {
                         SftpHost = host,
+                        SftpPort = ftpPort,
                         SftpLogin = login,
                         SftpPassword = password,
                         UserId = userId
@@ -125,14 +137,12 @@ namespace TBot.Application.Services
 
                 string phpScript = _phpGeneratorService.GeneratePhpScript(userApp.AppName, userApp.AppBundle, userApp.Secret, userApp.SecretKeyParam);
 
-                string directory = "PHPUploads";  
-
                 var uploadResult = await _sftpService.UploadFileAsync
                     (
-                        user.UserFtp.SftpHost, 
+                        user.UserFtp.SftpHost,
+                        user.UserFtp.SftpPort,
                         user.UserFtp.SftpLogin, 
                         user.UserFtp.SftpPassword, 
-                        directory, 
                         phpScript
                     );
                 

@@ -9,7 +9,7 @@ namespace TBot.Domain.Services
 {
     public interface ISftpService
     {
-        Task<BaseResult> UploadFileAsync(string host, string username, string password, string directory, string fileContent);
+        Task<BaseResult> UploadFileAsync(string host, int port, string username, string password, string fileContent);
 
     }
 }

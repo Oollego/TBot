@@ -14,42 +14,38 @@ namespace TBot.Application.Services
     internal class SftpService : ISftpService
     {
 
-        public async Task<BaseResult> UploadFileAsync(string host, string username, string password, string directory, string fileContent)
+        public async Task<BaseResult> UploadFileAsync(string host, int port, string username, string password, string fileContent)
         {
             return await Task.Run(() =>
             {
                 try
                 {
-                    using (var sftp = new SftpClient(host, username, password))
+                    using var client = new SftpClient(host, port, username, password);
+
+                    client.Connect();
+
+                    using var ms = new MemoryStream(Encoding.UTF8.GetBytes(fileContent));
+
+                    client.UploadFile(ms, GetFileName());
+
+                    client.Disconnect();
+
+                    return new BaseResult
                     {
-                        sftp.Connect();
-                        sftp.ChangeDirectory(directory);
-
-                        using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(fileContent)))
-                        {
-                            sftp.UploadFile(ms, GetFileName());
-                        }
-
-                        sftp.Disconnect();
-                    }
-
-                    return new BaseResult 
-                    { 
-                        IsSuccess = true, 
+                        IsSuccess = true,
                         ResultMessage = ResultMessage.FileHaveBeenUploaded
                     };
                 }
                 catch (Exception ex)
                 {
-                    return new BaseResult 
-                    { 
-                        IsSuccess = false, 
-                        ResultMessage = ResultMessage.UploadFileError + "\n" + ex.Message 
+                    return new BaseResult
+                    {
+                        IsSuccess = false,
+                        ResultMessage = ResultMessage.UploadFileError + "\n" + ex.Message
                     };
                 }
             });
         }
-
 
 
         private static string GetFileName()

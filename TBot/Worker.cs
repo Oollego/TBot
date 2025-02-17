@@ -231,7 +231,7 @@ namespace TBot
             }
         }
 
-        // Команда /setserver param - host, login, password
+        // Команда /setserver param - host, port, login, password
         async Task HandleSetServer(Message msg, string args)
         {
             var argsArray = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -241,10 +241,11 @@ namespace TBot
                 return;
             }
             string host = argsArray[0];
-            string login = argsArray[1];
-            string password = argsArray[2];
+            string port = argsArray[1];
+            string login = argsArray[2];
+            string password = argsArray[3];
 
-            var result = await _storageService.SetStorageDataAsync(host, login, password, msg.Chat.Id);
+            var result = await _storageService.SetStorageDataAsync(host, port, login, password, msg.Chat.Id);
 
             await bot!.SendMessage(msg.Chat.Id, result.ResultMessage);
         }

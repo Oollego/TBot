@@ -106,6 +106,15 @@ namespace TBot.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ftp порт не верный..
+        /// </summary>
+        internal static string FtpPortIsNotCorrect {
+            get {
+                return ResourceManager.GetString("FtpPortIsNotCorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Загрузок не было..
         /// </summary>
         internal static string HistoryEmpty {

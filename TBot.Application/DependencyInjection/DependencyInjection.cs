@@ -10,13 +10,16 @@ namespace TBot.Application.DependencyInjection
     {
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IHashService, HashService>();
             services.AddSingleton<IAppService, AppService>();
             services.AddSingleton<ISecretService, SecretService>();
-
-
+            services.AddSingleton<IPhpGeneratorService, PhpGeneratorService>();
+            services.AddSingleton<IRoleService, RoleService>();
+            services.AddSingleton<ISecretService, SecretService>();
+            services.AddSingleton<ISftpService, SftpService>();
+            services.AddSingleton<IStorageService, StorageService>();
+            services.AddSingleton<IUserService, UserService>();
         }
     }
 }
