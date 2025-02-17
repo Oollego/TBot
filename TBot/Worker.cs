@@ -299,7 +299,7 @@ namespace TBot
                 sb.AppendLine($"<b>Приложение:</b> <code>{history.AppName ?? "N/A"}</code>");
                 sb.AppendLine($"<b>Bundle:</b> <code>{history.AppBundle ?? "N/A"}</code>");
                 sb.AppendLine($"<b>Дата:</b> <code>{history.Timestamp:yyyy-MM-dd HH:mm:ss} UTC</code>");
-                sb.AppendLine("<br>");
+
             }
             return sb.ToString();
         }

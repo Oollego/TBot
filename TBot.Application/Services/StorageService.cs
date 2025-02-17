@@ -146,7 +146,7 @@ namespace TBot.Application.Services
                         phpScript
                     );
                 
-                if ( uploadResult.IsSuccess )
+                if ( !uploadResult.IsSuccess )
                 {
                     var userHistoryRepository = serviceProvider.GetRequiredService<IBaseRepository<UserHistory>>();
 
@@ -156,7 +156,7 @@ namespace TBot.Application.Services
                         AppBundle = userApp.AppBundle,
                         Secret = userApp.Secret,
                         SecretKeyParam = userApp.SecretKeyParam,
-                        Username = userApp.AppName,
+                        Username = user.UserName,
                         UserId = userId,
                     }; 
 

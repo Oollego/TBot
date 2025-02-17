@@ -16,7 +16,6 @@ namespace TBot.DAL.DependencyInjection
     {
         public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddScoped<IServiceProvider, ServiceProvider>();
 
             var connectionString = configuration.GetConnectionString("MySQL") ?? "";
 
