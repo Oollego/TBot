@@ -14,6 +14,6 @@ namespace TBot.Domain.Entity
         public string? Secret { get; set; }
         public string? SecretKeyParam { get; set; }
         public long UserId { get; set; }
-        public User User { get; set; } = default!;
+        public UserData UserData { get; set; } = default!;
     }
 }

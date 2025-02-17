@@ -10,7 +10,13 @@ namespace TBot.Application.DependencyInjection
     {
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<ITelegramService, TelegramService>();
+
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IHashService, HashService>();
+            services.AddSingleton<IAppService, AppService>();
+            services.AddSingleton<ISecretService, SecretService>();
+
+
         }
     }
 }

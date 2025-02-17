@@ -15,7 +15,6 @@ namespace TBot.Application.Services
             byte[] bytes = hasher.ComputeHash( System.Text.Encoding.UTF8.GetBytes(input) );
 
             return Convert.ToBase64String( bytes );
-                
         }
     }
 }

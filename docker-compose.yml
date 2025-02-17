@@ -22,6 +22,7 @@ services:
     image: ${DOCKER_REGISTRY-}tbot
     environment:
         - TOKEN=5612927906:AAE3chRHyA4QFSo1TORJXMUu_q2YMG_YIF0
+
     volumes:
         - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     build:

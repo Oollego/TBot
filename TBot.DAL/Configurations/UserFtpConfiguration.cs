@@ -13,14 +13,14 @@ namespace TBot.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserFtp> builder)
         {
-            builder.ToTable("user_ftp");
+            builder.ToTable("user_ftp_settings");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.SftpHost).IsRequired().HasMaxLength(256);
             builder.Property(x => x.SftpPassword).IsRequired().HasMaxLength(36);
             builder.Property(x => x.SftpLogin).IsRequired().HasMaxLength(128);
 
-            builder.HasOne<User>(x => x.User)
+            builder.HasOne<UserData>(x => x.UserData)
                 .WithOne(x => x.UserFtp)
                 .HasForeignKey<UserFtp>(x => x.UserId);
 

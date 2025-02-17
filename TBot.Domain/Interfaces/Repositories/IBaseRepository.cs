@@ -11,5 +11,6 @@ namespace TBot.Domain.Interfaces.Repositories
         IQueryable<TEntity> GetAll();
         Task<TEntity> CreateAsync(TEntity entity);
         Task<long> SaveChangesAsync();
+        TEntity Update(TEntity entity);
     }
 }

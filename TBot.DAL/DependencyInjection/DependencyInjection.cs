@@ -30,7 +30,7 @@ namespace TBot.DAL.DependencyInjection
 
         public static void InitRepositories(this IServiceCollection services)
         {
-            services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
+            services.AddTransient<IBaseRepository<UserData>, BaseRepository<UserData>>();
             services.AddTransient<IBaseRepository<UserApp>, BaseRepository<UserApp>>();
             services.AddTransient<IBaseRepository<UserFtp>, BaseRepository<UserFtp>>();
             services.AddTransient<IBaseRepository<UserHistory>, BaseRepository<UserHistory>>();

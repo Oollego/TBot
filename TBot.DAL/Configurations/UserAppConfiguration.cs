@@ -13,7 +13,7 @@ namespace TBot.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserApp> builder)
         {
-            builder.ToTable("user_app");
+            builder.ToTable("user_apps");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.AppName).IsRequired().HasMaxLength(128);
